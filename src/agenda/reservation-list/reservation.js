@@ -45,14 +45,14 @@ class Reservation extends Component {
       return this.props.renderDay(date ? xdateToData(date) : undefined, item);
     }
     const today = dateutils.sameDate(date, XDate()) ? this.style.today : undefined;
-    if (date) {
+    if (date && item) {
       return (
         <View style={this.style.day} testID={RESERVATION_DATE}>
           <Text allowFontScaling={false} style={[this.style.dayNum, today]}>{date.getDate()}</Text>
           <Text allowFontScaling={false} style={[this.style.dayText, today]}>{XDate.locales[XDate.defaultLocale].dayNamesShort[date.getDay()]}</Text>
         </View>
       );
-    } else {
+    } else if (item) {
       return (
         <View style={this.style.day}/>
       );
