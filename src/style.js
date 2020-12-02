@@ -1,5 +1,5 @@
 export const foregroundColor = 'white';
-export const backgroundColor = '#f2F4f5'; // Agenda's reservations bg color
+export const backgroundColor = 'white'; // Agenda's reservations bg color
 
 export const separatorColor = '#f2F4f5'; // not in use
 export const processedColor = '#a7e0a3'; // not in use

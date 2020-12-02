@@ -13,12 +13,12 @@ export default function platformStyles(appStyle) {
       right: 0,
       top: 0,
       flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingLeft: 24,
-      paddingRight: 24,
+      justifyContent: 'space-around',
+      paddingLeft: 12,
+      paddingRight: 12,
       paddingTop: 15,
       paddingBottom: 7,
-      backgroundColor: appStyle.calendarBackground
+      backgroundColor: appStyle.weeksBackgroudColor
     }
   };
 }
