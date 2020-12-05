@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {TouchableOpacity, Text} from 'react-native';
+import {TouchableOpacity, Text, View} from 'react-native';
 import PropTypes from 'prop-types';
 import {shouldUpdate} from '../../../component-updater';
 import Dot from '../../dot';
@@ -103,14 +103,23 @@ class Day extends Component {
         accessibilityLabel={this.props.accessibilityLabel}
       >
         <Text allowFontScaling={false} style={textStyle}>{String(this.props.children)}</Text>
-        <Dot
-          theme={theme}
-          isMarked={marked}
-          dotColor={dotColor}
-          isSelected={selected}
-          isToday={isToday}
-          isDisabled={isDisabled}
+        <View style={{flexDirection:'row', alignContent:'space-between'}}>
+        {!isDisabled && marking.items && marking.items.map((item) => { 
+          const colorStatus = item.status == "NOT_CONFIRMED"? '#FF6E40': dotColor
+          return ( <View style={{marginRight:1}}>
+          <Dot
+            theme={theme}
+            isMarked={marked}
+            dotColor={colorStatus}
+            isSelected={selected}
+            isToday={isToday}
+            isDisabled={isDisabled}
         />
+        </View>)
+        }
+      )
+      }
+      </View>
       </TouchableOpacity>
     );
   }
