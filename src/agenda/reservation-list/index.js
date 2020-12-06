@@ -8,6 +8,7 @@ import dateutils from '../../dateutils';
 import styleConstructor from './style';
 import {parseDate} from '../../interface';
 
+const ITEM_HEIGHT = 140.5
 
 class ReservationList extends Component {
   static displayName = 'IGNORE';
@@ -121,9 +122,9 @@ class ReservationList extends Component {
       this.setState({
         reservations
       }, () => {
-                let h = 0;
+          let h = 0;
           for (let i = 0; i < scrollPosition; i++) {
-            h += this.heights[i] || 0;
+            h += ITEM_HEIGHT || 0;
           }
           this.list.scrollToOffset({offset: h, animated: false});
           this.props.onDayChange(selectedDay, false);
@@ -252,9 +253,9 @@ class ReservationList extends Component {
     this.setState({
       reservations
     }, () => {
-              let h = 0;
+        let h = 0;
         for (let i = 0; i < scrollPosition; i++) {
-          h += this.heights[i] || 0;
+          h += ITEM_HEIGHT || 0;
         }
         this.list.scrollToOffset({offset: h, animated: false});
         this.props.onDayChange(selectedDay, false);
