@@ -8,8 +8,6 @@ import dateutils from '../../dateutils';
 import styleConstructor from './style';
 import {parseDate} from '../../interface';
 
-const ITEM_HEIGHT = 140.5
-
 class ReservationList extends Component {
   static displayName = 'IGNORE';
 
@@ -98,38 +96,38 @@ class ReservationList extends Component {
     this.props.onScroll(yOffset);
     let topRowOffset = 0;
     let topRow;
-    if (!yOffset){
-      let h = 0;
-      let scrollPosition = 0;
-      const selectedDay = this.props.selectedDay.clone();
-      const iterator = parseDate(this.props.selectedDay.clone().getTime()-3600*24*10*1000);
-      let reservations = [];
-      for (let i = 0; i < 10; i++) {
-        const res = this.getReservationsForDay(iterator, this.props);
-        if (res) {
-          reservations = reservations.concat(res);
-        }
-        iterator.addDays(1);
-      }
-      scrollPosition = reservations.length;
-      for (let i = 10; i < 30; i++) {
-        const res = this.getReservationsForDay(iterator, this.props);
-        if (res) {
-          reservations = reservations.concat(res);
-        }
-        iterator.addDays(1);
-      }
-      this.setState({
-        reservations
-      }, () => {
-          let h = 0;
-          for (let i = 0; i < scrollPosition; i++) {
-            h += ITEM_HEIGHT || 0;
-          }
-          this.list.scrollToOffset({offset: h, animated: false});
-          this.props.onDayChange(selectedDay, false);
-      });
-    }
+    // if (!yOffset){
+    //   let h = 0;
+    //   let scrollPosition = 0;
+    //   const selectedDay = this.props.selectedDay.clone();
+    //   const iterator = parseDate(this.props.selectedDay.clone().getTime()-3600*24*10*1000);
+    //   let reservations = [];
+    //   for (let i = 0; i < 10; i++) {
+    //     const res = this.getReservationsForDay(iterator, this.props);
+    //     if (res) {
+    //       reservations = reservations.concat(res);
+    //     }
+    //     iterator.addDays(1);
+    //   }
+    //   scrollPosition = reservations.length;
+    //   for (let i = 10; i < 30; i++) {
+    //     const res = this.getReservationsForDay(iterator, this.props);
+    //     if (res) {
+    //       reservations = reservations.concat(res);
+    //     }
+    //     iterator.addDays(1);
+    //   }
+    //   this.setState({
+    //     reservations
+    //   }, () => {
+    //       let h = 0;
+    //       for (let i = 0; i < scrollPosition; i++) {
+    //         h += ITEM_HEIGHT || 0;
+    //       }
+    //       this.list.scrollToOffset({offset: h, animated: false});
+    //       this.props.onDayChange(selectedDay, false);
+    //   });
+    // }
     
     for (topRow = 0; topRow < this.heights.length; topRow++) {
       if (topRowOffset + this.heights[topRow] / 2 >= yOffset) {
@@ -218,7 +216,7 @@ class ReservationList extends Component {
       }
       iterator.addDays(1);
     } else {
-      for (let i = 0; i < 31; i++) {
+      for (let i = 0; i < 90; i++) {
         const res = this.getReservationsForDay(iterator, props);
         if (res) {
           reservations = reservations.concat(res);
@@ -253,12 +251,14 @@ class ReservationList extends Component {
     this.setState({
       reservations
     }, () => {
+      setTimeout(() => {
         let h = 0;
         for (let i = 0; i < scrollPosition; i++) {
-          h += ITEM_HEIGHT || 0;
+          h += this.heights[i] || 0;
         }
         this.list.scrollToOffset({offset: h, animated: false});
         this.props.onDayChange(selectedDay, false);
+      }, 100);
     });
   }
 
