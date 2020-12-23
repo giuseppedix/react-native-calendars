@@ -10,6 +10,7 @@ import ReservationsList from './reservation-list';
 import styleConstructor from './style';
 import {VelocityTracker} from '../input';
 import {AGENDA_CALENDAR_KNOB} from '../testIDs';
+import { EventEmitter } from 'events';
 
 
 const HEADER_HEIGHT = 104;
@@ -97,7 +98,8 @@ export default class AgendaView extends Component {
     /** Called when the momentum scroll stops for the agenda list. **/
     onMomentumScrollEnd: PropTypes.func,
     /** Show items only for the selected day. Default = false */
-    showOnlySelectedDayItems: PropTypes.bool
+    showOnlySelectedDayItems: PropTypes.bool,
+    emitter: PropTypes.instanceOf(EventEmitter),
   };
 
   constructor(props) {
@@ -325,6 +327,7 @@ export default class AgendaView extends Component {
         ref={(c) => this.list = c}
         theme={this.props.theme}
         showOnlySelectedDayItems={this.props.showOnlySelectedDayItems}
+        emitter={this.props.emitter}
       />
     );
   }

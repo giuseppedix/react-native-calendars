@@ -7,6 +7,8 @@ import XDate from 'xdate';
 import dateutils from '../../dateutils';
 import styleConstructor from './style';
 import {parseDate} from '../../interface';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import {EventEmitter} from 'events';
 
 class ReservationList extends Component {
   static displayName = 'IGNORE';
@@ -28,6 +30,7 @@ class ReservationList extends Component {
     // the value of date key kas to be an empty array []. If there exists no value for date key it is
     // considered that the date in question is not yet loaded
     reservations: PropTypes.object,
+    emitter: PropTypes.object,
     selectedDay: PropTypes.instanceOf(XDate),
     topDay: PropTypes.instanceOf(XDate),
     refreshControl: PropTypes.element,
@@ -50,19 +53,40 @@ class ReservationList extends Component {
       reservations: []
     };
 
+    this.todayIndex = 0
     this.heights=[];
     this.selectedDay = this.props.selectedDay;
     this.scrollOver = true;
+    //this.emitter = props.emitter
   }
 
   UNSAFE_componentWillMount() {
     this.updateDataSource(this.getReservations(this.props).reservations);
+    this.props.emitter.addListener('goToToday', this.goOnTop.bind(this));
   }
 
   updateDataSource(reservations) {
     this.setState({
       reservations
     });
+  }
+
+  goOnTop(){
+    const today = XDate(new Date())
+    this.props.onDayChange(today.clone())
+    // const iterator = parseDate(today.clone().getTime());
+    // let reservations = [];
+    // for (let i = 0; i < 90; i++) {
+    //   const res = this.getReservationsForDay(iterator, this.props);
+    //   if (res) {
+    //     reservations = reservations.concat(res);
+    //   }
+    //   iterator.addDays(1);
+    // }
+    // this.updateDataSource(reservations);
+    // setTimeout(() => {
+    //   this.list && this.list.scrollToOffset({offset: 0, animated: true});
+    // }, 500);
   }
 
   updateReservations(props) {
@@ -256,6 +280,7 @@ class ReservationList extends Component {
         for (let i = 0; i < scrollPosition; i++) {
           h += this.heights[i] || 0;
         }
+        this.todayIndex = this.todayIndex + h
         this.list.scrollToOffset({offset: h, animated: false});
         this.props.onDayChange(selectedDay, false);
       }, 100);
@@ -273,6 +298,7 @@ class ReservationList extends Component {
       );
     }
     return (
+      <>
       <FlatList
         ref={(c) => this.list = c}
         style={this.props.style}
@@ -292,6 +318,7 @@ class ReservationList extends Component {
         onMomentumScrollBegin={this.props.onMomentumScrollBegin}
         onMomentumScrollEnd={this.props.onMomentumScrollEnd}
       />
+      </>
     );
   }
 }
