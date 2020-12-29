@@ -58,6 +58,9 @@ class ReservationList extends Component {
     this.heights=[];
     this.selectedDay = this.props.selectedDay;
     this.scrollOver = true;
+    this.scrollPosition = 0
+    this.offset = 0
+    this.refresh = false
     //this.emitter = props.emitter
   }
 
@@ -190,6 +193,16 @@ class ReservationList extends Component {
 
   onRowLayoutChange(ind, event) {
     this.heights[ind] = event.nativeEvent.layout.height;
+    if (ind < this.scrollPosition){
+      this.offset += event.nativeEvent.layout.height
+    } else if (this.refresh){      
+      this.refresh = false
+      const selectedDay = this.props.selectedDay.clone();
+      this.list.scrollToOffset({offset: this.offset, animated: true});
+        this.props.onDayChange(selectedDay, false);
+        this.offset = 0
+        this.scrollPosition = 0
+    }
   }
 
   renderRow({item, index}) {
@@ -274,6 +287,7 @@ class ReservationList extends Component {
     if (_.isFunction(this.props.onRefresh)){
       this.props.onRefresh()
     }
+    this.refresh = true
     let h = 0;
     let scrollPosition = 0;
     const selectedDay = this.props.selectedDay.clone();
@@ -297,16 +311,17 @@ class ReservationList extends Component {
     this.setState({
       reservations
     }, () => {
+      this.scrollPosition = scrollPosition
       // this.list.scrollToOffset({offset: 0, animated: true});
       //   this.props.onDayChange(selectedDay, true);
-      setTimeout(() => {
-        let h = 0;
-        for (let i = 0; i < scrollPosition; i++) {
-          h += this.heights[i] || 0;
-        }
-        this.list.scrollToOffset({offset: h, animated: true});
-        this.props.onDayChange(selectedDay, false);
-      }, 250);
+      // setTimeout(() => {
+      //   let h = 0;
+      //   for (let i = 0; i < scrollPosition; i++) {
+      //     h += this.heights[i] || 0;
+      //   }
+      //   this.list.scrollToOffset({offset: h, animated: true});
+      //   this.props.onDayChange(selectedDay, false);
+      // }, 250);
     });
   }
 
