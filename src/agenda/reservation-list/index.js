@@ -306,7 +306,7 @@ class ReservationList extends Component {
         }
         this.list.scrollToOffset({offset: h, animated: true});
         this.props.onDayChange(selectedDay, false);
-      }, 100);
+      }, 250);
     });
   }
 
