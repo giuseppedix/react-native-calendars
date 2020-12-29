@@ -450,6 +450,7 @@ export default class AgendaView extends Component {
               markingType={this.props.markingType}
               removeClippedSubviews={this.props.removeClippedSubviews}
               onDayPress={this._chooseDayFromCalendar.bind(this)}
+              onDayLongPress={this._chooseDayFromCalendar.bind(this)}
               scrollEnabled={this.state.calendarScrollable}
               hideExtraDays={shouldHideExtraDays}
               firstDay={this.props.firstDay}

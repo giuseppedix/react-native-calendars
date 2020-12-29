@@ -3,7 +3,7 @@ import {FlatList, ActivityIndicator, View} from 'react-native';
 import Reservation from './reservation';
 import PropTypes from 'prop-types';
 import XDate from 'xdate';
-
+import _ from 'underscore'
 import dateutils from '../../dateutils';
 import styleConstructor from './style';
 import {parseDate} from '../../interface';
@@ -53,7 +53,8 @@ class ReservationList extends Component {
       reservations: []
     };
 
-    this.todayIndex = 0
+    this.reset = false
+    this.resumeToTop = false
     this.heights=[];
     this.selectedDay = this.props.selectedDay;
     this.scrollOver = true;
@@ -65,6 +66,10 @@ class ReservationList extends Component {
     this.props.emitter.addListener('goToToday', this.goOnTop.bind(this));
   }
 
+  componentWillUnmount(){
+    this.props.emitter.removeAllListeners()
+  }
+
   updateDataSource(reservations) {
     this.setState({
       reservations
@@ -72,8 +77,14 @@ class ReservationList extends Component {
   }
 
   goOnTop(){
-    const today = XDate(new Date())
-    this.props.onDayChange(today.clone())
+    this.resumeToTop = true
+    this.setState({
+      reservations: []
+    }, () => {
+      const today = XDate(new Date())    
+      this.props.onDayChange(today.clone())
+      this.updateReservations(this.props);
+    });          
     // const iterator = parseDate(today.clone().getTime());
     // let reservations = [];
     // for (let i = 0; i < 90; i++) {
@@ -97,14 +108,22 @@ class ReservationList extends Component {
         scrollPosition += this.heights[i] || 0;
       }
       this.scrollOver = false;
-      this.list.scrollToOffset({offset: scrollPosition, animated: true});
+      this.list && this.list.scrollToOffset({offset: scrollPosition, animated: true});
+    } else if (this.resumeToTop || this.reset){
+      this.resumeToTop = false
+      this.reset = false
+      this.list && this.list.scrollToOffset({offset: 0, animated: true});
     }
     this.selectedDay = props.selectedDay;
     this.updateDataSource(reservations.reservations);
   }
 
   UNSAFE_componentWillReceiveProps(props) {
+
+    this.updateReservations(props);
+
     if (!dateutils.sameDate(props.topDay, this.props.topDay)) {
+      this.reset = true
       this.setState({
         reservations: []
       }, () => {
@@ -240,7 +259,7 @@ class ReservationList extends Component {
       }
       iterator.addDays(1);
     } else {
-      for (let i = 0; i < 90; i++) {
+      for (let i = 0; i < 30; i++) {
         const res = this.getReservationsForDay(iterator, props);
         if (res) {
           reservations = reservations.concat(res);
@@ -252,6 +271,9 @@ class ReservationList extends Component {
   }
 
   _onRefresh = () => {
+    if (_.isFunction(this.props.onRefresh)){
+      this.props.onRefresh()
+    }
     let h = 0;
     let scrollPosition = 0;
     const selectedDay = this.props.selectedDay.clone();
@@ -275,13 +297,14 @@ class ReservationList extends Component {
     this.setState({
       reservations
     }, () => {
+      // this.list.scrollToOffset({offset: 0, animated: true});
+      //   this.props.onDayChange(selectedDay, true);
       setTimeout(() => {
         let h = 0;
         for (let i = 0; i < scrollPosition; i++) {
           h += this.heights[i] || 0;
         }
-        this.todayIndex = this.todayIndex + h
-        this.list.scrollToOffset({offset: h, animated: false});
+        this.list.scrollToOffset({offset: h, animated: true});
         this.props.onDayChange(selectedDay, false);
       }, 100);
     });
