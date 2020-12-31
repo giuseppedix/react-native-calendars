@@ -105,7 +105,7 @@ class Day extends Component {
         <Text allowFontScaling={false} style={textStyle}>{String(this.props.children)}</Text>
         <View style={{flexDirection:'row', alignContent:'space-between'}}>
         {!isDisabled && marking.items && marking.items.map((item) => { 
-          const colorStatus = item.status == "NOT_CONFIRMED"? '#FF6E40': dotColor
+          const colorStatus = item.planningStatus == 2? '#FF6E40': dotColor
           return ( <View style={{marginRight:1}}>
           <Dot
             theme={theme}
