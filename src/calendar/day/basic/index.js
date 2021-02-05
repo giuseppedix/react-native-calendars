@@ -90,6 +90,14 @@ class Day extends Component {
     } else if (typeof disableAllTouchEventsForDisabledDays === 'boolean' && isDisabled) {
       shouldDisableTouchEvent = disableAllTouchEventsForDisabledDays;
     }
+    var colorStatus = dotColor
+    if (marking.items && marking.items.length > 0){
+      for (var i = 0; i < marking.items.length; i++){
+        if (marking.items[i].planningStatus == 2){
+          colorStatus = '#FF6E40'
+        }
+      }
+    }
 
     return (
       <TouchableOpacity
@@ -104,9 +112,7 @@ class Day extends Component {
       >
         <Text allowFontScaling={false} style={textStyle}>{String(this.props.children)}</Text>
         <View style={{flexDirection:'row', alignContent:'space-between'}}>
-        {!isDisabled && marking.items && marking.items.map((item) => { 
-          const colorStatus = item.planningStatus == 2? '#FF6E40': dotColor
-          return ( <View style={{marginRight:1}}>
+        {!isDisabled && marking.items && <View style={{marginRight:1}}>
           <Dot
             theme={theme}
             isMarked={marked}
@@ -115,10 +121,8 @@ class Day extends Component {
             isToday={isToday}
             isDisabled={isDisabled}
         />
-        </View>)
-        }
-      )
-      }
+        </View>
+        }      
       </View>
       </TouchableOpacity>
     );
