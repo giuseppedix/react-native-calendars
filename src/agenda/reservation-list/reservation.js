@@ -1,12 +1,12 @@
 import _ from 'lodash';
-import React, {Component} from 'react';
-import {View, Text} from 'react-native';
+import React, { Component } from 'react';
+import { View, Text } from 'react-native';
 
-import {xdateToData} from '../../interface';
+import { xdateToData } from '../../interface';
 import XDate from 'xdate';
 import dateutils from '../../dateutils';
 import styleConstructor from './style';
-import {RESERVATION_DATE} from '../../testIDs';
+import { RESERVATION_DATE } from '../../testIDs';
 
 
 class Reservation extends Component {
@@ -45,7 +45,7 @@ class Reservation extends Component {
       return this.props.renderDay(date ? xdateToData(date) : undefined, item);
     }
     const today = dateutils.sameDate(date, XDate()) ? this.style.today : undefined;
-    if (date && item) {
+    if (date) {
       return (
         <View style={this.style.day} testID={RESERVATION_DATE}>
           <Text allowFontScaling={false} style={[this.style.dayNum, today]}>{date.getDate()}</Text>
@@ -54,13 +54,13 @@ class Reservation extends Component {
       );
     } else if (item) {
       return (
-        <View style={this.style.day}/>
+        <View style={this.style.day} />
       );
     }
   }
 
   render() {
-    const {reservation, date} = this.props.item;
+    const { reservation, date } = this.props.item;
     let content;
     if (reservation) {
       const firstItem = date ? true : false;
